@@ -35,5 +35,7 @@ build/
 ### Arch Linux ###
 .tool-versions
 
-
 ### Terraform ###
+*.tfstate
+*.tfstate.*
+.terraform/
