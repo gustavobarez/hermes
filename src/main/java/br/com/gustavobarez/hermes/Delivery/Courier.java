@@ -1,44 +1,31 @@
-package br.com.gustavobarez.hermes.Route;
+package br.com.gustavobarez.hermes.Delivery;
 
 import java.time.LocalDateTime;
 
-import br.com.gustavobarez.hermes.Delivery.Delivery;
-import br.com.gustavobarez.hermes.Order.Order;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "routes")
+@Table(name = "couriers")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Route {
+public class Courier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @OneToOne
-    private Order order;
-
-    @NotNull
-    @OneToOne
-    private Delivery delivery;
-
-    @Column(name = "attributed_At")
-    private LocalDateTime attributedAt;
+    private String name;
 
     @Column(name = "created_At")
     private LocalDateTime createdAt;
