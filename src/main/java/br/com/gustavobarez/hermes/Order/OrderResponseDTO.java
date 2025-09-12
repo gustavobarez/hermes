@@ -1,8 +1,8 @@
 package br.com.gustavobarez.hermes.Order;
 
-public record CreateOrderResponseDTO(Long id, String description, String originAddress, String deliveryAddress,
+public record OrderResponseDTO(Long id, String description, String originAddress, String deliveryAddress,
         Status status) {
-    public CreateOrderResponseDTO(Order order) {
+    public OrderResponseDTO(Order order) {
         this(
                 order.getId(),
                 order.getDescription(),

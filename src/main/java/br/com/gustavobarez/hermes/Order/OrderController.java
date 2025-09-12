@@ -20,7 +20,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<CreateOrderResponseDTO>> createOrder(@Valid @RequestBody CreateOrderRequestDTO request) {
+    public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> createOrder(@Valid @RequestBody OrderRequestDTO request) {
         var order = service.createOrder(request);
         var response = new ApiResponseDTO<>(order, "create-order");
         return ResponseEntity.ok(response);

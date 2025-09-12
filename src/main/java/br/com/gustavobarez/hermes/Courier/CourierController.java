@@ -20,8 +20,8 @@ public class CourierController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<CreateCourierResponseDTO>> createCourier(
-            @Valid @RequestBody CreateCourierRequestDTO request) {
+    public ResponseEntity<ApiResponseDTO<CourierResponseDTO>> createCourier(
+            @Valid @RequestBody CourierRequestDTO request) {
         var courier = service.createCourier(request);
         var response = new ApiResponseDTO<>(courier, "create-courier");
         return ResponseEntity.ok(response);

@@ -1,6 +1,7 @@
 package br.com.gustavobarez.hermes.Courier;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class CourierService {
         this.repository = repository;
     }
 
-    public CreateCourierResponseDTO createCourier(CreateCourierRequestDTO request) {
+    public CourierResponseDTO createCourier(CourierRequestDTO request) {
 
         Courier courier = Courier.builder()
                 .name(request.name())
@@ -22,10 +23,14 @@ public class CourierService {
 
         repository.save(courier);
 
-        CreateCourierResponseDTO response = new CreateCourierResponseDTO(courier);
+        CourierResponseDTO response = new CourierResponseDTO(courier);
 
         return response;
 
+    }
+
+    public Optional<Courier> findById(Long courierId) {
+        return repository.findById(courierId);
     }
 
 }
