@@ -30,6 +30,38 @@ public class OrderService {
         return response;
     }
 
+    public OrderResponseDTO updateOrder(UpdateOrderRequestDTO request, Long orderId) {
+        var order = repository.findById(orderId);
+
+        if (request.description() == null && request.originAddress() == null && request.deliveryAddress() == null) {
+            throw new IllegalArgumentException("All fields cannot be empty or null");
+        }
+
+        if (request.description() != null) {
+            order.get().setDescription(request.description());
+        }
+
+        if (request.originAddress() != null) {
+            order.get().setOriginAddress(request.originAddress());
+        }
+
+        if (request.deliveryAddress() != null) {
+            order.get().setDeliveryAddress(request.deliveryAddress());
+        }
+
+        if (request.status() != null) {
+            order.get().setStatus(request.status());
+        }
+
+        order.get().setUpdatedAt(LocalDateTime.now());
+
+        repository.save(order.get());
+
+        OrderResponseDTO response = new OrderResponseDTO(order.get());
+
+        return response;
+    }
+
     public Optional<Order> findById(Long orderId) {
         return repository.findById(orderId);
     }
