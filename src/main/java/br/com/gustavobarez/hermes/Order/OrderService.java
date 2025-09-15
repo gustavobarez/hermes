@@ -62,6 +62,18 @@ public class OrderService {
         return response;
     }
 
+    public OrderResponseDTO deleteOrder(Long orderId) {
+        var order = repository.findById(orderId);
+
+        order.get().setDeletedAt(LocalDateTime.now());
+
+        repository.save(order.get());
+
+        OrderResponseDTO response = new OrderResponseDTO(order.get());
+
+        return response;
+    }
+
     public Optional<Order> findById(Long orderId) {
         return repository.findById(orderId);
     }

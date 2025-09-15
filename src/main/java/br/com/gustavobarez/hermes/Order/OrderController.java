@@ -1,6 +1,7 @@
 package br.com.gustavobarez.hermes.Order;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,13 @@ public class OrderController {
             @RequestParam Long id) {
         var order = service.updateOrder(request, id);
         var response = new ApiResponseDTO<>(order, "update-order");
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> deleteOrder(@RequestParam Long id) {
+        var order = service.deleteOrder(id);
+        var response = new ApiResponseDTO<>(order, "delete-order");
         return ResponseEntity.ok(response);
     }
 
