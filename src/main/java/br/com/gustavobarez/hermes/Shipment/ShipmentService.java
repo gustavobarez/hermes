@@ -2,6 +2,8 @@ package br.com.gustavobarez.hermes.Shipment;
 
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import br.com.gustavobarez.hermes.Courier.CourierResponseDTO;
@@ -17,8 +19,10 @@ public class ShipmentService {
     private final CourierService courierService;
     private final OrderService orderService;
     private final AwsSnsService awsSnsService;
+    private static final Logger logger = LoggerFactory.getLogger(CourierService.class);
 
-    public ShipmentService(ShipmentRepository repository, CourierService courierService, OrderService orderService, AwsSnsService awsSnsService) {
+    public ShipmentService(ShipmentRepository repository, CourierService courierService, OrderService orderService,
+            AwsSnsService awsSnsService) {
         this.repository = repository;
         this.courierService = courierService;
         this.orderService = orderService;
@@ -26,6 +30,7 @@ public class ShipmentService {
     }
 
     public ShipmentResponseDTO createShipment(ShipmentRequestDTO request) {
+        logger.info("Iniciando processamento do service");
         var courier = courierService.findById(request.courierId());
         var order = orderService.findById(request.orderId());
 
@@ -45,7 +50,7 @@ public class ShipmentService {
                 shipment.getAttributedAt());
 
         awsSnsService.publishMessage("created-shipment", response);
-        
+        logger.info("Processamento concluído com sucesso");
         return response;
     }
 

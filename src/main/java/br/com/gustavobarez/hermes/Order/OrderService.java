@@ -3,15 +3,18 @@ package br.com.gustavobarez.hermes.Order;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import br.com.gustavobarez.hermes.Courier.CourierService;
 import br.com.gustavobarez.hermes.utils.aws.AwsSnsService;
 
 @Service
 public class OrderService {
 
     private final OrderRepository repository;
-
+    private static final Logger logger = LoggerFactory.getLogger(CourierService.class);
     private final AwsSnsService awsSnsService;
 
     public OrderService(OrderRepository repository, AwsSnsService awsSnsService) {
@@ -20,6 +23,7 @@ public class OrderService {
     }
 
     public OrderResponseDTO createOrder(OrderRequestDTO request) {
+        logger.info("Iniciando processamento do service");
         Order order = Order.builder()
                 .description(request.description())
                 .originAddress(request.originAddress())
@@ -33,11 +37,12 @@ public class OrderService {
         OrderResponseDTO response = new OrderResponseDTO(order);
 
         awsSnsService.publishMessage("created-order", response);
-
+        logger.info("Processamento concluído com sucesso");
         return response;
     }
 
     public OrderResponseDTO updateOrder(UpdateOrderRequestDTO request, Long orderId) {
+        logger.info("Iniciando processamento do service");
         var order = repository.findById(orderId);
 
         if (request.description() == null && request.originAddress() == null && request.deliveryAddress() == null) {
@@ -65,11 +70,12 @@ public class OrderService {
         repository.save(order.get());
 
         OrderResponseDTO response = new OrderResponseDTO(order.get());
-
+        logger.info("Processamento concluído com sucesso");
         return response;
     }
 
     public OrderResponseDTO deleteOrder(Long orderId) {
+        logger.info("Iniciando processamento do service");
         var order = repository.findById(orderId);
 
         order.get().setDeletedAt(LocalDateTime.now());
@@ -77,7 +83,7 @@ public class OrderService {
         repository.save(order.get());
 
         OrderResponseDTO response = new OrderResponseDTO(order.get());
-
+        logger.info("Processamento concluído com sucesso");
         return response;
     }
 

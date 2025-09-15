@@ -3,6 +3,8 @@ package br.com.gustavobarez.hermes.Courier;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import br.com.gustavobarez.hermes.utils.aws.AwsSnsService;
@@ -11,7 +13,7 @@ import br.com.gustavobarez.hermes.utils.aws.AwsSnsService;
 public class CourierService {
 
     private final CourierRepository repository;
-
+    private static final Logger logger = LoggerFactory.getLogger(CourierService.class);
     private final AwsSnsService awsSnsService;
 
     public CourierService(CourierRepository repository, AwsSnsService awsSnsService) {
@@ -20,6 +22,7 @@ public class CourierService {
     }
 
     public CourierResponseDTO createCourier(CourierRequestDTO request) {
+        logger.info("Iniciando processamento do service");
         Courier courier = Courier.builder()
                 .name(request.name())
                 .createdAt(LocalDateTime.now())
@@ -30,7 +33,7 @@ public class CourierService {
         CourierResponseDTO response = new CourierResponseDTO(courier);
 
         awsSnsService.publishMessage("created-courier", response);
-
+        logger.info("Processamento concluído com sucesso");
         return response;
     }
 
