@@ -5,13 +5,18 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import br.com.gustavobarez.hermes.utils.aws.AwsSnsService;
+
 @Service
 public class OrderService {
 
     private final OrderRepository repository;
 
-    public OrderService(OrderRepository repository) {
+    private final AwsSnsService awsSnsService;
+
+    public OrderService(OrderRepository repository, AwsSnsService awsSnsService) {
         this.repository = repository;
+        this.awsSnsService = awsSnsService;
     }
 
     public OrderResponseDTO createOrder(OrderRequestDTO request) {
@@ -26,6 +31,8 @@ public class OrderService {
         repository.save(order);
 
         OrderResponseDTO response = new OrderResponseDTO(order);
+
+        awsSnsService.publishMessage("created-order", response);
 
         return response;
     }

@@ -5,17 +5,21 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import br.com.gustavobarez.hermes.utils.aws.AwsSnsService;
+
 @Service
 public class CourierService {
 
     private final CourierRepository repository;
 
-    public CourierService(CourierRepository repository) {
+    private final AwsSnsService awsSnsService;
+
+    public CourierService(CourierRepository repository, AwsSnsService awsSnsService) {
         this.repository = repository;
+        this.awsSnsService = awsSnsService;
     }
 
     public CourierResponseDTO createCourier(CourierRequestDTO request) {
-
         Courier courier = Courier.builder()
                 .name(request.name())
                 .createdAt(LocalDateTime.now())
@@ -25,8 +29,9 @@ public class CourierService {
 
         CourierResponseDTO response = new CourierResponseDTO(courier);
 
-        return response;
+        awsSnsService.publishMessage("created-courier", response);
 
+        return response;
     }
 
     public Optional<Courier> findById(Long courierId) {
